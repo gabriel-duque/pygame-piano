@@ -60,7 +60,8 @@ If you want to launch it as a one-shot test you can start TiMidity++ like this:
     $ timidity -iA
 
 For a more permanent/no-action setup, create a user `systemd` service by
-creating a file with the following contents at `~/.config/systemd/user/`:
+creating a file called `timidity.service` with the following contents in
+`~/.config/systemd/user/`:
 
     [Unit]
     Description=TiMidity++ Daemon
