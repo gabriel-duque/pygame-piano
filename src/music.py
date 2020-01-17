@@ -14,7 +14,7 @@ with contextlib.redirect_stdout(None):
 # you might want to change some keys.
 # I have annotated the changes to make for the azerty keymap
 key_to_note = {
-        # pygame_key_id: (pitch, white, on)
+        # pygame_key_id: (pitch, black, on)
 
         # pygame_key_id: pygame's internal constant to represent a key
         # pitch: the pitch of this note (on the octave 0)
@@ -92,6 +92,8 @@ def main() -> None:
     go_on = True
     while go_on:
         for event in pygame.event.get():
+
+            # Turn note on if known key
             if event.type == pygame.KEYDOWN:
                 key = event.key
                 if key in key_to_note:
@@ -106,6 +108,7 @@ def main() -> None:
                 elif key == pygame.K_ESCAPE:
                     go_on = False
 
+            # Turn note off if known key
             elif event.type == pygame.KEYUP:
                 key = event.key
                 if key in key_to_note:
