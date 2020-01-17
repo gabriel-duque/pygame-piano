@@ -99,6 +99,7 @@ def main() -> None:
                 if key in key_to_note:
                     note, black, on = key_to_note[key]
                     if not on:
+                        # XXX: fix 'bug' in midi_to_ansi_note
                         print(f'DOWN: Key: {key} Note: {note + note_count * octave} ', end='')
                         print(f'Name: {pygame.midi.midi_to_ansi_note(note + note_count * octave)}')
                         midi_hndl.note_on(note + note_count * octave, velocity)
@@ -114,6 +115,7 @@ def main() -> None:
                 if key in key_to_note:
                     note, black, on = key_to_note[key]
                     if on:
+                        # XXX: fix 'bug' in midi_to_ansi_note
                         print(f'UP: Key: {key} Note: {note + note_count * octave} ', end='')
                         print(f'Name: {pygame.midi.midi_to_ansi_note(note + note_count * octave)}')
                         midi_hndl.note_off(note + note_count * octave, velocity)
