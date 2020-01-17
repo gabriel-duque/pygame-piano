@@ -21,19 +21,19 @@ key_to_note = {
         # black: a boolean to know if the key is black or white
         # on: a boolean to keep track of if this note is on
 
-        # 24 is the pitch for the first C on a piano keyboard (C0)
-        pygame.K_a: (24, False, False), # C0       (azerty: pygame.K_q)
-        pygame.K_w: (25, True,  False), # C#/Db0   (azerty: pygame.K_z)
-        pygame.K_s: (26, False, False), # D0
-        pygame.K_e: (27, False, False), # D#/Eb0
-        pygame.K_d: (28, True,  False), # E0
-        pygame.K_f: (29, False, False), # F0
-        pygame.K_t: (30, True,  False), # F#/Gb0
-        pygame.K_g: (31, False, False), # G0
-        pygame.K_y: (32, False, False), # G#/Ab0
-        pygame.K_h: (33, True,  False), # A0
-        pygame.K_u: (34, False, False), # A#/Bb0
-        pygame.K_j: (35, True,  False), # B0
+        # 12 is the pitch for C0 (this isn't on a piano keyboard as they start at A0 (pitch: 21))
+        pygame.K_a: (12, False, False), # C0       (azerty: pygame.K_q)
+        pygame.K_w: (13, True,  False), # C#/Db0   (azerty: pygame.K_z)
+        pygame.K_s: (14, False, False), # D0
+        pygame.K_e: (15, False, False), # D#/Eb0
+        pygame.K_d: (16, True,  False), # E0
+        pygame.K_f: (17, False, False), # F0
+        pygame.K_t: (18, True,  False), # F#/Gb0
+        pygame.K_g: (19, False, False), # G0
+        pygame.K_y: (20, False, False), # G#/Ab0
+        pygame.K_h: (21, True,  False), # A0
+        pygame.K_u: (22, False, False), # A#/Bb0
+        pygame.K_j: (23, True,  False), # B0
 }
 
 # The number of different notes in an octave
@@ -44,6 +44,15 @@ octave = 4
 
 # The default velocity (volume)
 velocity = 124
+
+# XXX: remove this once pygame merges PR #1561
+def midi_to_ansi_note(midi_note: int) -> str:
+    '''Return the ANSI Note name for a midi number'''
+    notes = ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab']
+    num_notes = 12
+    note_name = notes[(midi_note - 21) % num_notes]
+    note_number = (midi_note - 12) // num_notes
+    return f'{note_name}{note_number}'
 
 def midi_device_prompt() -> int:
     '''Dump MIDI devices info and prompt user for a choice'''
@@ -81,6 +90,7 @@ def main() -> None:
 
     # We only want to get events for our keyboard
     # Let's disable the others for performance
+    # XXX: fix allowed events
     pygame.event.set_allowed(None)
     pygame.event.set_allowed(pygame.KEYDOWN)
 
@@ -99,9 +109,9 @@ def main() -> None:
                 if key in key_to_note:
                     note, black, on = key_to_note[key]
                     if not on:
-                        # XXX: fix 'bug' in midi_to_ansi_note
+                        # XXX: change this once pygame merges PR #1561
                         print(f'DOWN: Key: {key} Note: {note + note_count * octave} ', end='')
-                        print(f'Name: {pygame.midi.midi_to_ansi_note(note + note_count * octave)}')
+                        print(f'Name: {midi_to_ansi_note(note + note_count * octave)}')
                         midi_hndl.note_on(note + note_count * octave, velocity)
                         key_to_note[key] = note, black, True
 
@@ -115,9 +125,9 @@ def main() -> None:
                 if key in key_to_note:
                     note, black, on = key_to_note[key]
                     if on:
-                        # XXX: fix 'bug' in midi_to_ansi_note
+                        # XXX: change this once pygame merges PR #1561
                         print(f'UP: Key: {key} Note: {note + note_count * octave} ', end='')
-                        print(f'Name: {pygame.midi.midi_to_ansi_note(note + note_count * octave)}')
+                        print(f'Name: {midi_to_ansi_note(note + note_count * octave)}')
                         midi_hndl.note_off(note + note_count * octave, velocity)
                         key_to_note[key] = note, black, False
 
