@@ -80,7 +80,7 @@ def draw_keyboard(window) -> None:
     margin = window.get_width() // 140
 
     white_width = (window.get_width() - 8 * margin) // 7
-    black_width = white_width // 2
+    black_width = white_width // 2 + 2 * margin
 
     left = margin
     top = margin
